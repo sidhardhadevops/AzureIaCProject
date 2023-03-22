@@ -8,9 +8,9 @@ In this project we will be deploying Azure Resources by leveraging :
 
 3) Powershell
 
-Target Architecture:
+Target Architecture reference:
 
-<img src="relative/path/in/repository/to/image.svg" width="128"/>
+https://learn.microsoft.com/en-us/azure/architecture/solution-ideas/articles/simple-branded-website 
 
 Components
 
