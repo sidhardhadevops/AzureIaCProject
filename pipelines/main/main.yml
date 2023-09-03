@@ -1,0 +1,56 @@
+trigger:
+  batch: true
+  branches:
+    include:
+    - main
+
+
+pool: ubuntu-latest
+
+
+variables:
+  - name: isMain
+    value: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+  - name: isManual
+    value: $[eq(variables['Build.Reason'], 'Manual')]
+  
+
+stages:
+  - stage: stage_build
+    displayName: 'Build'
+    jobs:
+    - job: job_build
+      displayName: 'Build'
+      variables:
+      - template: ./variables/alpha.yml 
+        steps:
+          - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
+            displayName: 'Terraform: Install'
+            inputs:
+            terraformVersion: '1.1.0'
+
+          - task: TerraformTaskV2@2
+            displayName: 'Terraform: Init ${{ variables.name }}'
+            inputs:
+            provider: 'azurerm'
+            command: 'init'
+            commandOptions: '-input=false -backend=false'
+            workingDirectory: ${{ variables.workingDirectory }}
+            backendServiceArm: '${{ variables.serviceConnection }}'
+            backendAzureRmResourceGroupName: '${{ variables.resourceGroupName }}'
+            backendAzureRmStorageAccountName: '${{ variables.storageAccountName }}'
+            backendAzureRmContainerName: ${{ variables.storageContainerName }}
+            backendAzureRmKey: '${{ variables.key }}'  
+
+           - task: TerraformTaskV2@2
+            displayName: 'Terraform: Validate ${{ variables.name }}'
+            inputs:
+            provider: 'azurerm'
+            command: 'validate'
+            workingDirectory: ${{ variables.workingDirectory }}
+            commandOptions: '${{variables.options}}'
+            environmentServiceNameAzureRM: '${{ variables.serviceConnection }}'  
+      
+
+  
+  

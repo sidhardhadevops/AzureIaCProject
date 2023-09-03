@@ -1,0 +1,11 @@
+variables:
+  ServiceConnection: 
+  SubscriptionId: 
+  ResourceGroupName: 
+  Key: 
+  ServicePrincipalObjectId: 
+  Location: 
+  StorageAccountName: 
+  StorageContainerName:
+  SubnetId: 
+
